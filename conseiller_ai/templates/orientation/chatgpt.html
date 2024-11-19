@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conseiller d'Orientation IA</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Styles de la navbar */
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .navbar-brand {
+            font-size: 1.5rem;
+        }
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+        }
+
+        /* Style pour centrer le contenu */
+        .chat {
+            max-width: 900px;  /* Agrandi pour plus de largeur */
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .chat-about h3 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #333;
+        }
+
+        .chat-history {
+            height: 500px; /* Augmenter la hauteur du div */
+            overflow-y: scroll;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            border: 1px solid transparent;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            background-color: #f1f1f1;
+            color: #333;
+            max-width: 80%;
+            word-wrap: break-word;
+            text-align: justify;  /* Texte justifié */
+        }
+
+        .my-message {
+            background-color: #27c686;
+            color: white;
+        }
+
+        .message-styles-user {
+            background-color: #064cdc;
+            color: white;
+        }
+
+        /* Style de la zone de saisie */
+        .input-group input {
+            border-radius: 30px;
+            padding: 10px 15px;
+        }
+
+        .btn-primary {
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        .chat-header img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .chat-about {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="container">
+
+    <!-- Barre de navigation -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+            <a class="navbar-brand text-white" href="{% url 'index' %}">Conseiller d'Orientation IA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'index' %}">Accueil</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'blog' %}">Blog</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'prompt' %}">Conseiller Virtuel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'about' %}">À propos</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    {% block content %}
+    <div class="chat">
+        <div class="chat-header clearfix">
+            <div class="row">
+                <div class="col-lg-6 d-flex align-items-center">
+                    <img src="{% static 'images/ai.jpeg' %}" alt="avatar" style="height: 50px; width: 50px;">
+                    <div class="chat-about mt-3">
+                        <h3 class="m-b-0">Mme Ruth</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-history chat-messages" id="chat-messages">
+            <ul>
+                <li class="clearfix">
+                    <div class="message my-message message-styles-valdo">{{ welcom_message }}</div>
+                </li>
+            </ul><br>
+        </div>
+
+        <form method="post" action=".">
+            {% csrf_token %}
+            <div class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="content" class="form-control" placeholder="Posez-moi vos questions et échangeons !!!" id="chat-message-input">
+                </div>
+                <button class="btn btn-primary ml-2" id="chat-message-submit">Envoyer</button>
+            </div>
+        </form>
+    </div>
+    {% endblock %}
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% block javascripts %}
+    <script>
+        console.log(window.location.host);
+        const protocol = window.location.protocol.toString() === 'https:' ? 'wss://' : 'ws://';
+
+        let webSocketProtocol = location.protocol == 'https:' ? 'wss' : 'ws';
+
+        const chatSocket = new WebSocket(
+            `${webSocketProtocol}://${window.location.host}/ws/orientation/search/`
+        );
+
+        chatSocket.onclose = function (e) {
+            console.log('onclose')
+        }
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+
+            if (data.message) {
+                document.querySelector('#chat-messages').removeChild(document.getElementById('loading'));
+                document.querySelector('#chat-messages').innerHTML +=
+                    `<ul>
+                        <li class="clearfix">
+                            <div class="message my-message message-styles-valdo">${data.message}</div>
+                        </li>
+                    </ul><br>`;
+            }
+
+            scrollToBottom();
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            e.preventDefault();
+
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+
+            if (message != '') {
+                document.querySelector('#chat-messages').innerHTML +=
+                    `<ul>
+                        <li class="clearfix">
+                            <div class="message other-message float-right message-styles-user">${message}</div>
+                        </li>
+                    </ul><br>`;
+
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                }));
+
+                const el = document.createElement('div');
+                el.setAttribute('id', 'loading');
+                el.innerHTML = `<div class="d-flex align-item-center">
+                    <img src="{% static 'images/load.gif' %}" style="height:25px; width:25px;">
+                    <p class="mx-2">Veuillez patienter, votre réponse arrive bientôt</p>
+                    </div> <br>`;
+
+                document.querySelector('#chat-messages').appendChild(el);
+            }
+
+            messageInputDom.value = '';
+            return false;
+        };
+
+        function scrollToBottom() {
+            let objDiv = document.getElementById("chat-messages");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        scrollToBottom();
+    </script>
+    {% endblock %}
+</body>
+</html>

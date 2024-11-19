@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Conseiller d'Orientation IA</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+{% block content %}
+
+<body class="container">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+            <a class="navbar-brand text-white" href="{% url 'index' %}">Conseiller d'Orientation IA</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'index' %}">Accueil</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'blog' %}">Blog</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'prompt' %}">Conseiller Virtuel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'about' %}">À propos</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container text-center">
+        <section class="my-5">
+            <h2>Bienvenue sur le Conseiller d'Orientation IA</h2>
+            <p>Notre conseiller virtuel est ici pour vous aider à trouver votre voie. Que vous soyez étudiant, professionnel en reconversion ou simplement curieux, nous avons les ressources qu'il vous faut.</p>
+            <img src="{% static 'images/16.png' %}" alt="Bienvenue" class="img-fluid" />
+        </section>
+
+        <section class="my-5">
+            <h2>Fonctionnalités</h2>
+            <div class="row">
+                <div class="col-md-4 d-flex flex-column">
+                    <h3>Évaluation des Compétences</h3>
+                    <p>Nous offrons des tests d'évaluation pour identifier vos compétences et intérêts.</p>
+                    <img src="{% static 'images/13.png' %}" alt="Évaluation des Compétences" class="img-fluid flex-fill" />
+                </div>
+                <div class="col-md-4 d-flex flex-column">
+                    <h3>Conseils Personnalisés</h3>
+                    <p>Recevez des recommandations adaptées à votre profil et vos aspirations.</p>
+                    <img src="{% static 'images/10.png' %}" alt="Conseils Personnalisés" class="img-fluid flex-fill" />
+                </div>
+                <div class="col-md-4 d-flex flex-column">
+                    <h3>Ressources Éducatives</h3>
+                    <p>Accédez à une bibliothèque de ressources pour vous aider dans votre parcours.</p>
+                    <img src="{% static 'images/15.png' %}" alt="Ressources Éducatives" class="img-fluid flex-fill" />
+                </div>
+            </div>
+
+        </section>
+
+        <section class="my-5">
+            <h2>Témoignages</h2>
+            <blockquote class="blockquote">
+                <p class="mb-0">"Le conseiller virtuel m'a aidé à découvrir des carrières que je n'avais jamais envisagées!"</p>
+                <footer class="blockquote-footer">ALI MOUSSA</footer>
+            </blockquote>
+            <blockquote class="blockquote">
+                <p class="mb-0">"Les tests d'évaluation étaient très utiles pour comprendre mes compétences." </p>
+                <footer class="blockquote-footer">NOUBA Jean</footer>
+            </blockquote>
+        </section>
+
+        <section class="my-5">
+            <h2>Commencez dès maintenant!</h2>
+            <p>Inscrivez-vous pour accéder à notre conseiller d'orientation virtuel et commence cer votre parcours vers une carrière épanouissante.</p>
+            <a href="#" class="btn btn-primary">S'inscrire</a>
+        </section>
+    </main>
+
+    <footer class="bg-primary text-white text-center py-3">
+        <p>&copy; 2024 Conseiller d'Orientation IA. Tous droits réservés.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+{% endblock content %}
+
+</html>

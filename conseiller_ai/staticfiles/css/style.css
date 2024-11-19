@@ -1,0 +1,14 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f9; /* Couleur de fond du corps */
+    color: #333;
+}
+
+main {
+    padding: 20px; /* Espacement intérieur du main */
+}
+
+footer {
+    margin-top: 20px; /* Espacement au-dessus du footer */
+}
